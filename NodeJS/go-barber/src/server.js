@@ -1,0 +1,53 @@
+const express = require('express')
+const session = require('express-session')
+const LokiStore = require('connect-loki')(session)
+const nunjucks = require('nunjucks')
+const path = require('path')
+const flash = require('connect-flash')
+const routes = require('./routes')
+
+class App {
+  constructor () {
+    this.express = express()
+    this.isDev = process.env.NODE_ENV !== 'production'
+
+    this.middlewares()
+    this.views()
+    this.routes()
+  }
+
+  middlewares () {
+    this.express.use(express.urlencoded({ extended: false }))
+    this.express.use(flash())
+    this.express.use(
+      // Configura a sessão
+      session({
+        name: 'root',
+        // Para em denvolvimento utiliza para gravar em um arquivo a sessão
+        store: new LokiStore({
+          path: path.resolve(__dirname, '..', 'tmp', 'sessions.db')
+        }),
+        secret: 'MyAppSecret',
+        resave: false,
+        // Já salva a sessão assim que conecta ao servidor
+        saveUninitialized: true
+      })
+    )
+  }
+
+  views () {
+    nunjucks.configure(path.resolve(__dirname, 'app', 'views'), {
+      watch: this.isDev,
+      express: this.express,
+      autoescape: true
+    })
+    this.express.use(express.static(path.resolve(__dirname, 'public')))
+    this.express.set('view engine', 'njk')
+  }
+
+  routes () {
+    this.express.use(routes)
+  }
+}
+
+module.exports = new App().express

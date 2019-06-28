@@ -1,0 +1,34 @@
+version: "3"
+
+# Indica quais serviços a aplicação utilkza
+services:
+  # Cria um container mongo
+  database:
+    image: kartoza/postgis
+
+  # Cria um container que é node
+  app:
+    # build lê o arquivo Dockerfile
+    build: .
+    # Indica qual porta será utilizada
+    ports:
+      - "3000:3000"
+    # Pode ser usado para passar variaveis ambiente
+    # nesse ecemplo está passando a url do container
+    # mongo, o nome "database" que foi usado la em cima
+    # é usado como a url, assim no index.js é usada a url
+    # para se conectar no banco
+    environment:
+      - DB_URL=database
+    # No container so foi possível usar comando com node,
+    # para usar o nodemon, foi necessário criar script no
+    # package.json
+    command: "yarn start"
+    # Faz com que o app espere o container do mongo subir
+    # primeiro para depois subir
+    depends_on:
+      - database
+    # Usado para vigirar alterações que são feitas e envialas
+    # a pasta onde o container está sendo executado
+    volumes:
+      - ".:/usr/app"
