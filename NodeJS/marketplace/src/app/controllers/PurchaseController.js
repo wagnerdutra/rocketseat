@@ -1,6 +1,5 @@
 const Ad = require('../models/Ad')
 const User = require('../models/User')
-const Mail = require('../services/Mail')
 const Queue = require('../services/Queue')
 const { PurchaseMail } = require('../jobs')
 

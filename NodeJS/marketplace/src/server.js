@@ -52,6 +52,7 @@ class App {
       }
 
       if (process.env.NODE_ENV !== 'production') {
+        // Usado para detalhar melhor erro mostando a linha que ocorreu, método, arquivo.. etc
         const youch = new Youch(err, req)
         // return res.send(await youch.toHTML()) // Retorna em HTML para melhor visualização
         return res.json(await youch.toJSON())

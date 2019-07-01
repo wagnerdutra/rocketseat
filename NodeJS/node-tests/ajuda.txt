@@ -1,3 +1,5 @@
+jest --init
+
 Para testar local, é usado o banco sqlite, pois o banco é criado em um
 arquivo físico e não um serviço.
 

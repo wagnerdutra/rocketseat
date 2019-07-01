@@ -9,10 +9,12 @@ module.exports = {
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   dialect: process.env.DB_DIALECT || "postgres",
-  storage: "./__tests__/database.sqlite", // Local onde deve ser salvo o banco, no caso, arquivo para sqlite
+  // Local onde deve ser salvo o banco, no caso, arquivo para sqlite
+  logging: false,
+  storage: "./__tests__/database.sqlite",
   define: {
     timestamps: true,
-    undescored: true,
-    undescoredAll: true
+    underscored: true,
+    underscoredAll: true
   }
 };
