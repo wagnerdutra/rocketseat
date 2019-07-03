@@ -1,8 +1,16 @@
 const { User } = require("../models");
 
+const Mail = require("../services/MailService");
+
+const axios = require("axios");
+
 class SessionController {
   async store(req, res) {
     const { email, password } = req.body;
+
+    const response = await axios.get("teste");
+
+    console.log(response);
 
     const user = await User.findOne({ where: { email } });
 
@@ -13,6 +21,13 @@ class SessionController {
     if (!(await user.checkPassword(password))) {
       return res.status(401).json({ message: "Incorrect password" });
     }
+
+    await Mail.send({
+      from: "Wagner Dutra <wagnerdutra1010@gmail.com",
+      to: `${user.name} <${user.email}>`,
+      subject: "Novo acesso em sua conta",
+      text: "Fala dev"
+    });
 
     return res.json({
       token: await user.generateToken()
